@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypothesis-Driven Problem Solving for Crop Protection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .sidebar-link.active { background-color: #f0fdf4; border-right: 4px solid #16a34a; color: #16a34a; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .bg-agri { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000'); background-size: cover; background-position: center; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Mobile Navigation Toggle -->
+    <button id="menuBtn" class="lg:hidden fixed bottom-6 right-6 z-50 bg-green-600 text-white p-4 rounded-full shadow-lg">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-8">
+                    <div class="p-2 bg-green-600 rounded-lg text-white">
+                        <i data-lucide="sprout"></i>
+                    </div>
+                    <h1 class="font-bold text-xl tracking-tight text-green-800">AgriSolve <span class="font-light">Consulting</span></h1>
+                </div>
+                
+                <nav class="space-y-1">
+                    <a href="#intro" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all active">
+                        <i data-lucide="home" class="w-5 h-5"></i> <span>Introduction</span>
+                    </a>
+                    <a href="#define" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all">
+                        <i data-lucide="target" class="w-5 h-5"></i> <span>Define the Problem</span>
+                    </a>
+                    <a href="#structure" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all">
+                        <i data-lucide="git-branch" class="w-5 h-5"></i> <span>Structure Issues</span>
+                    </a>
+                    <a href="#hypotheses" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all">
+                        <i data-lucide="lightbulb" class="w-5 h-5"></i> <span>Formulate Hypotheses</span>
+                    </a>
+                    <a href="#analyze" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5"></i> <span>Data Analysis</span>
+                    </a>
+                    <a href="#findings" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all">
+                        <i data-lucide="file-check-2" class="w-5 h-5"></i> <span>Findings & Recs</span>
+                    </a>
+                    <a href="#planning" class="sidebar-link flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all">
+                        <i data-lucide="calendar" class="w-5 h-5"></i> <span>Planning the Work</span>
+                    </a>
+                </nav>
+            </div>
+            <div class="absolute bottom-0 w-full p-6 border-t border-gray-100">
+                <div class="text-xs text-gray-400">Marketer's Guide Edition 2.0</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-72">
+            
+            <!-- Hero Section -->
+            <section id="intro" class="relative h-[500px] flex items-center justify-center text-white bg-agri p-8">
+                <div class="max-w-3xl text-center space-y-6">
+                    <span class="inline-block px-4 py-1 bg-green-600/30 backdrop-blur-md rounded-full border border-green-400/50 text-green-200 text-sm font-semibold">Masterclass Pemecahan Masalah</span>
+                    <h2 class="text-5xl font-bold leading-tight uppercase">Hypothesis-Driven Problem Solving</h2>
+                    <p class="text-lg text-gray-200 font-light">Pendekatan "Answer-First" untuk pemasar industri Perlindungan Tanaman guna meningkatkan efisiensi operasional dan ROI pemasaran.</p>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="document.getElementById('define').scrollIntoView()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full font-bold transition-all shadow-xl hover:scale-105">Mulai Belajar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. Introduction Content -->
+            <section class="p-8 lg:p-16 max-w-5xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-3xl font-bold text-green-800 mb-6">Mengapa Berbasis Hipotesis?</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Dalam industri perlindungan tanaman yang dinamis, kita sering dibanjiri data—mulai dari laporan hama hingga angka penetrasi pasar. Pendekatan tradisional yang menganalisis semua data sering kali berakhir dengan "lumpuh karena analisis".
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Pendekatan <strong>Hypothesis-Driven</strong> mengajarkan kita untuk mengajukan jawaban sementara (hipotesis) di awal, lalu menggunakan data secara strategis hanya untuk membuktikan atau membantah hipotesis tersebut.
+                        </p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-8 border-l-green-600">
+                        <h4 class="font-bold text-lg mb-4 text-green-900">Keuntungan bagi Marketer:</h4>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3"><i data-lucide="check-circle-2" class="text-green-600"></i> Efisiensi waktu (fokus pada data yang penting).</li>
+                            <li class="flex gap-3"><i data-lucide="check-circle-2" class="text-green-600"></i> Pengambilan keputusan yang lebih tajam untuk <em>launch</em> produk.</li>
+                            <li class="flex gap-3"><i data-lucide="check-circle-2" class="text-green-600"></i> Komunikasi lebih meyakinkan kepada <em>stakeholders</em>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Define The Problem -->
+            <section id="define" class="bg-white p-8 lg:p-16 border-t border-gray-100">
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">1</div>
+                        <h3 class="text-3xl font-bold text-green-800">Define the Problem</h3>
+                    </div>
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                        <h4 class="text-xl font-semibold mb-6 italic text-gray-500">"Masalah yang didefinisikan dengan baik adalah masalah yang setengah selesai."</h4>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <p class="text-gray-600">Gunakan kriteria <strong>SMART</strong> untuk mendefinisikan masalah perlindungan tanaman Anda:</p>
+                                <div class="space-y-2">
+                                    <div class="p-3 bg-white rounded-lg shadow-sm"><strong>Specific:</strong> Penurunan market share fungisida.</div>
+                                    <div class="p-3 bg-white rounded-lg shadow-sm"><strong>Measurable:</strong> Sebesar 15% YoY.</div>
+                                    <div class="p-3 bg-white rounded-lg shadow-sm"><strong>Actionable:</strong> Melalui penyesuaian strategi distribusi.</div>
+                                    <div class="p-3 bg-white rounded-lg shadow-sm"><strong>Relevant:</strong> Wilayah kunci Jawa Tengah.</div>
+                                    <div class="p-3 bg-white rounded-lg shadow-sm"><strong>Time-bound:</strong> Dalam Q3 & Q4 tahun ini.</div>
+                                </div>
+                            </div>
+                            <div class="bg-green-900 text-white p-6 rounded-xl">
+                                <h5 class="font-bold mb-4">Problem Definition Sheet (PDS)</h5>
+                                <p class="text-sm opacity-80 mb-4">Pastikan semua pemangku kepentingan setuju pada:</p>
+                                <ul class="text-sm space-y-2">
+                                    <li>- Konteks & Latar Belakang</li>
+                                    <li>- Definisi Sukses</li>
+                                    <li>- Kendala (Constraints)</li>
+                                    <li>- Stakeholder Utama</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Identify and Structure Issues -->
+            <section id="structure" class="p-8 lg:p-16">
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">2</div>
+                        <h3 class="text-3xl font-bold text-green-800">Identify & Structure Issues</h3>
+                    </div>
+                    <p class="text-gray-600 mb-8">Gunakan <strong>Issue Tree</strong> untuk memecah masalah besar menjadi komponen yang lebih kecil. Gunakan prinsip <strong>MECE</strong> (Mutually Exclusive, Collectively Exhaustive).</p>
+                    
+                    <!-- Interactive Tree Visualization -->
+                    <div class="relative overflow-hidden bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-green-700 text-white p-4 rounded-lg w-64 text-center font-bold shadow-md">Penurunan Laba Herbisida</div>
+                            <div class="h-8 w-1 bg-gray-300"></div>
+                            <div class="flex gap-12">
+                                <div class="flex flex-col items-center">
+                                    <div class="h-8 w-1 bg-gray-300"></div>
+                                    <div class="bg-green-600 text-white p-4 rounded-lg w-64 text-center text-sm shadow-md">Penurunan Pendapatan (Revenue)</div>
+                                    <div class="h-8 w-1 bg-gray-300"></div>
+                                    <div class="flex gap-4">
+                                        <div class="bg-green-100 text-green-800 p-3 rounded-lg text-xs w-28 text-center border border-green-200">Volume Penjualan Turun</div>
+                                        <div class="bg-green-100 text-green-800 p-3 rounded-lg text-xs w-28 text-center border border-green-200">Harga Jual Turun</div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="h-8 w-1 bg-gray-300"></div>
+                                    <div class="bg-green-600 text-white p-4 rounded-lg w-64 text-center text-sm shadow-md">Kenaikan Biaya (Costs)</div>
+                                    <div class="h-8 w-1 bg-gray-300"></div>
+                                    <div class="flex gap-4">
+                                        <div class="bg-green-100 text-green-800 p-3 rounded-lg text-xs w-28 text-center border border-green-200">Biaya Bahan Baku Aktif</div>
+                                        <div class="bg-green-100 text-green-800 p-3 rounded-lg text-xs w-28 text-center border border-green-200">Biaya Distribusi Logistik</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Formulate Hypotheses -->
+            <section id="hypotheses" class="bg-white p-8 lg:p-16 border-t border-gray-100">
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">3</div>
+                        <h3 class="text-3xl font-bold text-green-800">Formulate Hypotheses</h3>
+                    </div>
+                    <div class="grid lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 space-y-6 text-gray-600">
+                            <p>Hipotesis bukanlah sekadar tebakan, melainkan "tebakan cerdas" berdasarkan intuisi dan pengalaman pasar Anda di lapangan.</p>
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                <h6 class="font-bold text-yellow-800 mb-2">Contoh Hipotesis Kerja:</h6>
+                                <p class="italic">"Penurunan market share terjadi karena petani beralih ke merek kompetitor bukan karena efikasi, melainkan karena program loyalitas toko tani kompetitor yang memberikan tempo pembayaran lebih lama."</p>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-2xl border border-green-100">
+                            <h5 class="font-bold text-green-800 mb-4">Struktur Hipotesis:</h5>
+                            <p class="text-sm font-mono bg-white p-3 rounded border">If [Action/Condition], then [Result] because [Reason].</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Collect and Analyze Data -->
+            <section id="analyze" class="p-8 lg:p-16">
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold">4</div>
+                        <h3 class="text-3xl font-bold text-green-800">Collect & Analyze Data</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <p class="text-gray-600">Jangan mencari data untuk mencari tahu segalanya. Carilah data yang spesifik untuk memverifikasi hipotesis Anda.</p>
+                            <div class="flex items-start gap-4 p-4 bg-white shadow-sm rounded-xl border border-gray-100">
+                                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="microscope"></i></div>
+                                <div>
+                                    <h6 class="font-bold">Analisis Kuantitatif</h6>
+                                    <p class="text-sm text-gray-500">Angka penjualan distributor, data cuaca harian, laporan stok kompetitor.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 bg-white shadow-sm rounded-xl border border-gray-100">
+                                <div class="p-2 bg-purple-100 text-purple-600 rounded-lg"><i data-lucide="users"></i></div>
+                                <div>
+                                    <h6 class="font-bold">Analisis Kualitatif</h6>
+                                    <p class="text-sm text-gray-500">Wawancara pemilik kios tani, FGD bersama petani padi, feedback tim sales.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-900 text-white rounded-3xl p-8 relative overflow-hidden">
+                            <h5 class="font-bold text-xl mb-6">Analisis 80/20</h5>
+                            <p class="text-gray-400 text-sm mb-6">Fokus pada 20% data yang akan memberikan 80% kejelasan terhadap hipotesis Anda.</p>
+                            <div class="space-y-4">
+                                <div class="w-full bg-gray-800 rounded-full h-4">
+                                    <div class="bg-green-500 h-4 rounded-full" style="width: 80%"></div>
+                                </div>
+                                <p class="text-xs text-green-400 font-bold">Insight yang Berharga</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Develop Findings, Conclusions & Recs -->
+            <section id="findings" class="bg-white p-8 lg:p-16 border-t border-gray-100">
+                <div class="max-w-5xl mx-auto text-center">
+                    <div class="inline-flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold mx-auto">5</div>
+                        <h3 class="text-3xl font-bold text-green-800 text-left">Develop Findings & Recommendations</h3>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8 mt-8">
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">F</div>
+                            <h6 class="font-bold text-gray-800 mb-2">Findings</h6>
+                            <p class="text-sm text-gray-500">Apa fakta yang ditemukan? "Petani menganggap produk kita terlalu kental untuk nozel sprayer lama."</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl">
+                            <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">C</div>
+                            <h6 class="font-bold text-gray-800 mb-2">Conclusions</h6>
+                            <p class="text-sm text-gray-500">Apa arti fakta ini? "Ada hambatan teknis yang menghalangi kepuasan pengguna (UX)."</p>
+                        </div>
+                        <div class="p-6 bg-gray-50 rounded-2xl border-2 border-green-600">
+                            <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">R</div>
+                            <h6 class="font-bold text-gray-800 mb-2 text-green-600">Recommendations</h6>
+                            <p class="text-sm text-gray-500 font-bold">Apa langkah selanjutnya? "Luncurkan kampanye demo cara pelarutan yang benar."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Planning the Work -->
+            <section id="planning" class="p-8 lg:p-16 bg-green-900 text-white">
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex items-center gap-4 mb-12">
+                        <div class="w-12 h-12 bg-green-700 rounded-full flex items-center justify-center text-white font-bold">6</div>
+                        <h3 class="text-3xl font-bold">Planning the Work</h3>
+                    </div>
+                    
+                    <div class="grid lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <p class="text-green-100 leading-relaxed">
+                                Rencana kerja (Workplan) memastikan hipotesis Anda diuji dengan tepat waktu dan sumber daya yang ada.
+                            </p>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 border-b border-green-700 pb-4">
+                                    <div class="w-8 h-8 rounded border border-green-500 flex items-center justify-center text-xs">1</div>
+                                    <p>Identifikasi data yang dibutuhkan per sub-isu.</p>
+                                </div>
+                                <div class="flex items-center gap-4 border-b border-green-700 pb-4">
+                                    <div class="w-8 h-8 rounded border border-green-500 flex items-center justify-center text-xs">2</div>
+                                    <p>Tentukan sumber data (Internal vs Eksternal).</p>
+                                </div>
+                                <div class="flex items-center gap-4 border-b border-green-700 pb-4">
+                                    <div class="w-8 h-8 rounded border border-green-500 flex items-center justify-center text-xs">3</div>
+                                    <p>Tetapkan PIC dan tenggat waktu (Timeline).</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/10">
+                            <h5 class="font-bold mb-6 flex items-center gap-2"><i data-lucide="clipboard-list"></i> Template Workplan Cepat</h5>
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="text-left text-green-300 border-b border-green-700">
+                                        <th class="py-2">Kegiatan</th>
+                                        <th class="py-2">Hasil Akhir</th>
+                                        <th class="py-2">Minggu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-green-800/50">
+                                        <td class="py-3">Wawancara Kios</td>
+                                        <td class="py-3 text-xs">Summary Insight</td>
+                                        <td class="py-3">W1</td>
+                                    </tr>
+                                    <tr class="border-b border-green-800/50">
+                                        <td class="py-3">Uji Laboratorium</td>
+                                        <td class="py-3 text-xs">Laporan Efikasi</td>
+                                        <td class="py-3">W1-2</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3">Penyusunan Deck</td>
+                                        <td class="py-3 text-xs">Strategi Baru</td>
+                                        <td class="py-3">W3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer / Conclusion -->
+            <footer class="p-16 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 Hypothesis-Driven Problem Solving for Agri-Marketers. Diproduksi untuk konsultasi internal.</p>
+                <div class="mt-4 flex justify-center gap-6">
+                    <a href="#" class="hover:text-green-600 transition-colors">Unduh Template PDF</a>
+                    <a href="#" class="hover:text-green-600 transition-colors">Hubungi Mentor</a>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = document.getElementById('menuBtn');
+        
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Navigation Highlight on Scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar-link');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Close sidebar on link click (mobile)
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
