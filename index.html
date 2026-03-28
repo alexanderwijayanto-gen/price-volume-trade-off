@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator Trade-Off Harga & Volume (Fungisida Brand ABC)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom scrollbar for table */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-emerald-700">Simulator Harga & Volume: Brand ABC (Indonesia)</h1>
+                <p class="text-slate-500 text-sm mt-1">Model Interaktif "Price-Volume Trade-Off" (Multi-Responden)</p>
+            </div>
+            <div class="flex gap-4 text-sm">
+                <div class="bg-emerald-50 text-emerald-800 px-4 py-2 rounded-lg border border-emerald-100 flex flex-col">
+                    <label for="baseFgpInput" class="block text-xs font-semibold uppercase text-emerald-600 mb-1">Base FGP / Ha</label>
+                    <div class="flex items-center">
+                        <span class="text-sm font-bold mr-1">Rp</span>
+                        <input type="number" id="baseFgpInput" value="136000" onchange="updateBaseValues()" class="bg-white border border-emerald-300 rounded px-2 py-1 text-base font-bold text-emerald-700 w-28 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+                </div>
+                <div class="bg-blue-50 text-blue-800 px-4 py-2 rounded-lg border border-blue-100 flex flex-col">
+                    <label for="baseCogsInput" class="block text-xs font-semibold uppercase text-blue-600 mb-1">COGS / Ha</label>
+                    <div class="flex items-center">
+                        <span class="text-sm font-bold mr-1">Rp</span>
+                        <input type="number" id="baseCogsInput" value="32640" onchange="updateBaseValues()" class="bg-white border border-blue-300 rounded px-2 py-1 text-base font-bold text-blue-700 w-28 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Parameter Info Banner -->
+        <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between text-sm">
+            <div class="flex items-center gap-2 text-indigo-800 font-semibold whitespace-nowrap">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Informasi Parameter (Base)</span>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 w-full text-indigo-900 justify-start md:justify-end">
+                <div>
+                    <span class="block text-xs text-indigo-500 uppercase tracking-wider">COGS IND/L</span>
+                    <span class="font-bold" id="infoCogsL">Rp 130.560</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-indigo-500 uppercase tracking-wider">Dosage value (Dosis)</span>
+                    <span class="font-bold">0,25 L/Ha</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-indigo-500 uppercase tracking-wider">COGS IND/Ha</span>
+                    <span class="font-bold" id="infoCogsHa">Rp 32.640 <span class="text-xs font-normal text-indigo-600">(didapat dari 130.560 × 0,25)</span></span>
+                </div>
+                <div>
+                    <span class="block text-xs text-indigo-500 uppercase tracking-wider">GP% (Gross Profit Margin)</span>
+                    <span class="font-bold text-emerald-600" id="infoGp">0,76 (76%)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- Left Panel: Input Table -->
+            <div class="xl:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-700">Skenario Volume (Input)</h2>
+                    <button onclick="resetData()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded transition">Reset Semua Data</button>
+                </div>
+
+                <!-- Tabs Navigation -->
+                <div class="overflow-x-auto border-b border-slate-200 mb-4">
+                    <nav class="flex space-x-1 w-max" aria-label="Tabs" id="tabsNav">
+                        <!-- Tab buttons generated by JS -->
+                    </nav>
+                </div>
+                
+                <p class="text-xs text-slate-500 mb-4" id="helperText">
+                    <!-- Helper text generated by JS -->
+                </p>
+
+                <div class="table-container overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-y border-slate-200">
+                            <tr>
+                                <th class="px-3 py-3 font-semibold">Perubahan</th>
+                                <th class="px-3 py-3 font-semibold">Harga (Rp)</th>
+                                <th class="px-3 py-3 font-semibold text-emerald-600">Tanpa Reaksi (L)</th>
+                                <th class="px-3 py-3 font-semibold text-blue-600">Dgn Reaksi (L)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inputTableBody" class="divide-y divide-slate-100">
+                            <!-- Rows generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-6 bg-amber-50 rounded-lg p-4 border border-amber-100">
+                    <h3 class="text-sm font-semibold text-amber-800 mb-2">Catatan Analisis:</h3>
+                    <ul class="text-xs text-amber-700 list-disc pl-4 space-y-1">
+                        <li><strong>Tanpa Reaksi Kompetitor:</strong> Asumsi kompetitor mempertahankan harga mereka saat kita mengubah harga.</li>
+                        <li><strong>Dengan Reaksi Kompetitor:</strong> Asumsi kompetitor ikut menaikkan/menurunkan harga merespon perubahan kita.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Panel: Charts -->
+            <div class="xl:col-span-7 flex flex-col gap-6">
+                
+                <!-- Volume Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-700 mb-4" id="chartVolTitle">Trade-Off: Harga vs Volume</h2>
+                    <div class="relative h-64 w-full">
+                        <canvas id="volumeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Financial Charts Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Revenue Chart -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h2 class="text-lg font-bold text-slate-700 mb-4" id="chartRevTitle">Dampak Pendapatan (Revenue)</h2>
+                        <div class="relative h-56 w-full">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Profit Chart -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h2 class="text-lg font-bold text-slate-700 mb-4" id="chartProfTitle">Dampak Laba Kotor (Gross Profit)</h2>
+                        <div class="relative h-56 w-full">
+                            <canvas id="profitChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Analisis Skenario (Best Case vs Worst Case) -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mt-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-700">Analisis Skenario: Best Case vs Worst Case</h2>
+                    <p class="text-xs text-slate-500 mt-1">Menampilkan persentase perubahan (Δ) dibandingkan skenario basis (Base). Untuk kenaikan harga, Best Case = Dengan Reaksi, Worst Case = Tanpa Reaksi.</p>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-center border-collapse">
+                    <thead class="text-xs text-slate-500 bg-slate-50 border-y border-slate-200 uppercase">
+                        <tr>
+                            <th rowspan="2" class="px-3 py-3 font-semibold border-r border-slate-200 align-middle">Perubahan Harga</th>
+                            <th colspan="3" class="px-3 py-2 font-semibold text-emerald-600 border-b border-r border-slate-200">Worst Case (Tanpa Reaksi)</th>
+                            <th colspan="3" class="px-3 py-2 font-semibold text-blue-600 border-b border-slate-200">Best Case (Dengan Reaksi)</th>
+                        </tr>
+                        <tr>
+                            <th class="px-3 py-2 font-medium border-r border-slate-200">Δ Volume</th>
+                            <th class="px-3 py-2 font-medium border-r border-slate-200">Δ Pendapatan</th>
+                            <th class="px-3 py-2 font-medium border-r border-slate-200">Δ Laba Kotor</th>
+                            <th class="px-3 py-2 font-medium border-r border-slate-200">Δ Volume</th>
+                            <th class="px-3 py-2 font-medium border-r border-slate-200">Δ Pendapatan</th>
+                            <th class="px-3 py-2 font-medium">Δ Laba Kotor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenarioTableBody" class="divide-y divide-slate-100">
+                        <!-- Rows generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA & STATE ---
+        let BASE_FGP = 136000;
+        let BASE_COGS = 32640;
+
+        // Default dataset template (Base)
+        let defaultData = [
+            { change: -0.15, price: 115600, volWo: 458500, volW: 436500 },
+            { change: -0.10, price: 122400, volWo: 448500, volW: 427685 },
+            { change: -0.05, price: 129200, volWo: 436000, volW: 418736 },
+            { change: -0.03, price: 131920, volWo: 429500, volW: 413811 },
+            { change: 0.00,  price: 136000, volWo: 400000, volW: 400000 },
+            { change: 0.03,  price: 140080, volWo: 380000, volW: 387136 },
+            { change: 0.05,  price: 142800, volWo: 358000, volW: 379681 },
+            { change: 0.10,  price: 149600, volWo: 333000, volW: 360220 },
+            { change: 0.15,  price: 156400, volWo: 308000, volW: 341200 }
+        ];
+
+        let activeTab = 'agg'; // 'agg' (Aggregate) or 0 to 9 (R1-R10)
+        const numRespondents = 10;
+        let respondentsData = []; // Will hold 10 separate datasets
+        let charts = {}; // Store chart instances
+
+        // --- FORMATTERS ---
+        const formatIDR = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+        const formatNum = (val) => new Intl.NumberFormat('id-ID').format(Math.round(val));
+        const formatPct = (val) => (val > 0 ? '+' : '') + Math.round(val * 100) + '%';
+        
+        const formatCompactIDR = (val) => {
+            if (val >= 1e9) return 'Rp ' + (val / 1e9).toFixed(1) + ' Miliar';
+            if (val >= 1e6) return 'Rp ' + (val / 1e6).toFixed(0) + ' Juta';
+            return 'Rp ' + val;
+        };
+
+        // --- PARAMETER INFO UPDATE ---
+        function updateParameterInfo() {
+            const dosage = 0.25;
+            const cogsPerL = BASE_COGS / dosage;
+            const gpMargin = (BASE_FGP - BASE_COGS) / BASE_FGP;
+
+            document.getElementById('infoCogsL').innerText = formatIDR(cogsPerL);
+            document.getElementById('infoCogsHa').innerHTML = `${formatIDR(BASE_COGS)} <span class="text-xs font-normal text-indigo-600">(didapat dari ${formatNum(cogsPerL)} &times; 0,25)</span>`;
+            document.getElementById('infoGp').innerText = `${gpMargin.toFixed(2).replace('.', ',')} (${(gpMargin * 100).toFixed(0)}%)`;
+        }
+
+        // --- DYNAMIC BASE VALUES ---
+        function updateBaseValues() {
+            let newFgp = parseFloat(document.getElementById('baseFgpInput').value);
+            let newCogs = parseFloat(document.getElementById('baseCogsInput').value);
+            
+            // Revert to old value if input is invalid
+            if (isNaN(newFgp) || newFgp < 0) { newFgp = BASE_FGP; document.getElementById('baseFgpInput').value = BASE_FGP; }
+            if (isNaN(newCogs) || newCogs < 0) { newCogs = BASE_COGS; document.getElementById('baseCogsInput').value = BASE_COGS; }
+
+            BASE_FGP = newFgp;
+            BASE_COGS = newCogs;
+
+            // Update prices across all templates and respondent data based on the new base FGP
+            defaultData.forEach(row => { row.price = BASE_FGP * (1 + row.change); });
+            
+            respondentsData.forEach(resp => {
+                resp.forEach(row => {
+                    row.price = BASE_FGP * (1 + row.change);
+                });
+            });
+
+            updateParameterInfo();
+            updateUI();
+        }
+
+        // --- INITIALIZATION ---
+        function init() {
+            respondentsData = Array.from({length: numRespondents}, () => JSON.parse(JSON.stringify(defaultData)));
+            initCharts();
+            updateParameterInfo();
+            updateUI();
+        }
+
+        // --- UI UPDATES ---
+        function updateUI() {
+            calculateRespondentMetrics();
+            renderTabs();
+            renderTable();
+            updateChartLabels();
+            updateCharts();
+            updateScenarioSummary();
+        }
+
+        function renderTabs() {
+            const nav = document.getElementById('tabsNav');
+            nav.innerHTML = '';
+            
+            const tabs = [{ id: 'agg', label: '📊 Agregat' }];
+            for (let i = 0; i < numRespondents; i++) {
+                tabs.push({ id: i, label: `R${i + 1}` });
+            }
+
+            tabs.forEach(tab => {
+                const isActive = activeTab === tab.id;
+                const btn = document.createElement('button');
+                btn.onclick = () => { activeTab = tab.id; updateUI(); };
+                btn.className = `px-3 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-colors ${
+                    isActive 
+                    ? 'border-emerald-500 text-emerald-700 bg-emerald-50/50' 
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                }`;
+                btn.innerText = tab.label;
+                nav.appendChild(btn);
+            });
+
+            // Update helper text
+            const helperText = document.getElementById('helperText');
+            if (activeTab === 'agg') {
+                helperText.innerHTML = "Menampilkan <strong>Rata-rata Agregat</strong> dari ke-5 responden. (Read-only)";
+            } else {
+                helperText.innerHTML = `Ubah estimasi volume untuk <strong>Responden ${activeTab + 1}</strong>.`;
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('inputTableBody');
+            tbody.innerHTML = '';
+
+            const isAgg = activeTab === 'agg';
+            const currentData = isAgg ? getAggregatedData() : respondentsData[activeTab];
+
+            currentData.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                const isBase = row.change === 0;
+                tr.className = isBase ? 'bg-slate-100 font-semibold' : 'hover:bg-slate-50 transition';
+                
+                const disabledAttr = (isBase || isAgg) ? 'readonly disabled' : '';
+                const bgClass = (isBase || isAgg) ? 'bg-slate-50 text-slate-500 cursor-not-allowed' : 'bg-white';
+
+                tr.innerHTML = `
+                    <td class="px-3 py-3">${formatPct(row.change)} ${isBase ? '(Base)' : ''}</td>
+                    <td class="px-3 py-3">${formatNum(row.price)}</td>
+                    <td class="px-3 py-2">
+                        <input type="number" 
+                            class="w-full border border-slate-300 rounded px-2 py-1 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm ${bgClass}" 
+                            value="${Math.round(row.volWo)}" 
+                            onchange="updateValue(${index}, 'volWo', this.value)"
+                            ${disabledAttr}>
+                    </td>
+                    <td class="px-3 py-2">
+                        <input type="number" 
+                            class="w-full border border-slate-300 rounded px-2 py-1 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm ${bgClass}" 
+                            value="${Math.round(row.volW)}" 
+                            onchange="updateValue(${index}, 'volW', this.value)"
+                            ${disabledAttr}>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateChartLabels() {
+            const label = activeTab === 'agg' ? '(Agregat)' : `(Responden ${activeTab + 1})`;
+            document.getElementById('chartVolTitle').innerText = `Trade-Off: Harga vs Volume ${label}`;
+            document.getElementById('chartRevTitle').innerText = `Dampak Pendapatan ${label}`;
+            document.getElementById('chartProfTitle').innerText = `Dampak Laba Kotor ${label}`;
+        }
+
+        // --- INTERACTION & CALCULATIONS ---
+        function updateValue(index, field, value) {
+            if (activeTab === 'agg') return; // Safety check
+            let numVal = parseFloat(value);
+            if (isNaN(numVal) || numVal < 0) numVal = 0;
+            respondentsData[activeTab][index][field] = numVal;
+            updateUI();
+        }
+
+        function resetData() {
+            respondentsData = Array.from({length: numRespondents}, () => JSON.parse(JSON.stringify(defaultData)));
+            updateUI();
+        }
+
+        function calculateRespondentMetrics() {
+            respondentsData.forEach(resp => {
+                resp.forEach(s => {
+                    s.revWo = s.price * s.volWo;
+                    s.revW = s.price * s.volW;
+                    s.gpWo = (s.price - BASE_COGS) * s.volWo;
+                    s.gpW = (s.price - BASE_COGS) * s.volW;
+                });
+            });
+        }
+
+        function getAggregatedData() {
+            let agg = JSON.parse(JSON.stringify(defaultData));
+            for (let i = 0; i < agg.length; i++) {
+                let sumWo = 0;
+                let sumW = 0;
+                for (let r = 0; r < numRespondents; r++) {
+                    sumWo += respondentsData[r][i].volWo;
+                    sumW += respondentsData[r][i].volW;
+                }
+                agg[i].volWo = sumWo / numRespondents;
+                agg[i].volW = sumW / numRespondents;
+                
+                // Recalculate financial metrics based on average volume
+                agg[i].revWo = agg[i].price * agg[i].volWo;
+                agg[i].revW = agg[i].price * agg[i].volW;
+                agg[i].gpWo = (agg[i].price - BASE_COGS) * agg[i].volWo;
+                agg[i].gpW = (agg[i].price - BASE_COGS) * agg[i].volW;
+            }
+            return agg;
+        }
+
+        // --- CHARTS LOGIC ---
+        function initCharts() {
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 6 } },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#cbd5e1',
+                        padding: 10,
+                        cornerRadius: 8,
+                    }
+                }
+            };
+
+            const ctxVol = document.getElementById('volumeChart').getContext('2d');
+            charts.vol = new Chart(ctxVol, {
+                type: 'line', data: { labels: [], datasets: [] },
+                options: { ...commonOptions, scales: { y: { beginAtZero: false, ticks: { callback: formatNum } } } }
+            });
+
+            const ctxRev = document.getElementById('revenueChart').getContext('2d');
+            charts.rev = new Chart(ctxRev, {
+                type: 'line', data: { labels: [], datasets: [] },
+                options: { ...commonOptions, scales: { y: { beginAtZero: false, ticks: { callback: formatCompactIDR } } } }
+            });
+
+            const ctxProf = document.getElementById('profitChart').getContext('2d');
+            charts.prof = new Chart(ctxProf, {
+                type: 'line', data: { labels: [], datasets: [] },
+                options: { ...commonOptions, scales: { y: { beginAtZero: false, ticks: { callback: formatCompactIDR } } } }
+            });
+        }
+
+        function updateCharts() {
+            const currentData = activeTab === 'agg' ? getAggregatedData() : respondentsData[activeTab];
+            const labels = currentData.map(s => formatPct(s.change) + '\n(' + formatNum(s.price) + ')');
+
+            const styleWo = {
+                borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 3, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#fff'
+            };
+            const styleW = {
+                borderColor: '#3b82f6', backgroundColor: 'transparent',
+                borderWidth: 3, borderDash: [5, 5], tension: 0.3, pointRadius: 4, pointBackgroundColor: '#fff'
+            };
+
+            // Vol Chart
+            charts.vol.data = {
+                labels: labels,
+                datasets: [
+                    { label: 'Tanpa Reaksi Kompetitor', data: currentData.map(s => s.volWo), ...styleWo, fill: true },
+                    { label: 'Dengan Reaksi Kompetitor', data: currentData.map(s => s.volW), ...styleW }
+                ]
+            };
+            charts.vol.options.plugins.tooltip.callbacks.label = (ctx) => `${ctx.dataset.label}: ${formatNum(ctx.raw)} L`;
+            charts.vol.update();
+
+            // Rev Chart
+            charts.rev.data = {
+                labels: labels,
+                datasets: [
+                    { label: 'Tanpa Reaksi', data: currentData.map(s => s.revWo), ...styleWo },
+                    { label: 'Dengan Reaksi', data: currentData.map(s => s.revW), ...styleW }
+                ]
+            };
+            charts.rev.options.plugins.tooltip.callbacks.label = (ctx) => `${ctx.dataset.label}: ${formatCompactIDR(ctx.raw)}`;
+            charts.rev.update();
+
+            // Prof Chart
+            charts.prof.data = {
+                labels: labels,
+                datasets: [
+                    { label: 'Tanpa Reaksi', data: currentData.map(s => s.gpWo), ...styleWo },
+                    { label: 'Dengan Reaksi', data: currentData.map(s => s.gpW), ...styleW }
+                ]
+            };
+            charts.prof.options.plugins.tooltip.callbacks.label = (ctx) => `${ctx.dataset.label}: ${formatCompactIDR(ctx.raw)}`;
+            charts.prof.update();
+        }
+
+        // --- SCENARIO SUMMARY LOGIC ---
+        function updateScenarioSummary() {
+            const currentData = activeTab === 'agg' ? getAggregatedData() : respondentsData[activeTab];
+            const tbody = document.getElementById('scenarioTableBody');
+            tbody.innerHTML = '';
+
+            // Cari basis data (Perubahan 0%)
+            const baseRow = currentData.find(r => r.change === 0);
+            if (!baseRow) return;
+
+            const baseVol = baseRow.volWo; 
+            const baseRev = baseRow.revWo;
+            const baseGp = baseRow.gpWo;
+
+            currentData.forEach(row => {
+                if (row.change === 0) return; // Lewati baris Base
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition';
+
+                // Fungsi hitung persentase dan format warna
+                const calcPct = (val, base) => {
+                    const pct = (val - base) / base;
+                    let colorClass = 'text-slate-500';
+                    if (pct > 0) colorClass = 'text-emerald-600';
+                    if (pct < 0) colorClass = 'text-red-500';
+                    
+                    const sign = pct > 0 ? '+' : '';
+                    return `<span class="font-bold ${colorClass}">${sign}${(pct * 100).toFixed(1)}%</span>`;
+                };
+
+                tr.innerHTML = `
+                    <td class="px-3 py-3 font-semibold border-r border-slate-100 bg-slate-50/50">${formatPct(row.change)}</td>
+                    <td class="px-3 py-2 border-r border-slate-100">${calcPct(row.volWo, baseVol)}</td>
+                    <td class="px-3 py-2 border-r border-slate-100">${calcPct(row.revWo, baseRev)}</td>
+                    <td class="px-3 py-2 border-r border-slate-200 bg-emerald-50/30">${calcPct(row.gpWo, baseGp)}</td>
+                    <td class="px-3 py-2 border-r border-slate-100">${calcPct(row.volW, baseVol)}</td>
+                    <td class="px-3 py-2 border-r border-slate-100">${calcPct(row.revW, baseRev)}</td>
+                    <td class="px-3 py-2 bg-blue-50/30">${calcPct(row.gpW, baseGp)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Run on load
+        window.onload = init;
+    </script>
+</body>
+</html>
